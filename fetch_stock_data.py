@@ -45,16 +45,41 @@ def fetch_stock_data(symbol, years):
         return None
 
 
-def save_to_csv(data, filename):
+def save_to_csv(data, filename, symbol):
     """
     Save stock data to CSV file.
     
     Args:
         data (pd.DataFrame): Stock data
         filename (str): Output CSV filename
+        symbol (str): Stock ticker symbol (for MultiIndex extraction)
     """
+    if isinstance(data.columns, pd.MultiIndex):
+        data = data.copy()
+        data.columns = data.columns.get_level_values(0)
     data.to_csv(filename)
     print(f"Data saved to {filename}")
+
+
+def get_col(data, name, symbol):
+    """Extract a column, handling MultiIndex columns from newer yfinance."""
+    if isinstance(data.columns, pd.MultiIndex):
+        if name in data.columns.get_level_values(0):
+            level_data = data[name]
+            if isinstance(level_data.columns, pd.MultiIndex):
+                return level_data[symbol] if symbol in level_data.columns else level_data.iloc[:, 0]
+            elif hasattr(level_data, 'columns') and symbol in level_data.columns:
+                return level_data[symbol]
+            return level_data.iloc[:, 0]
+    return data[name]
+
+
+def get_close(data, symbol):
+    return get_col(data, 'Close', symbol)
+
+
+def get_volume(data, symbol):
+    return get_col(data, 'Volume', symbol)
 
 
 def print_summary(data, symbol):
@@ -65,18 +90,21 @@ def print_summary(data, symbol):
         data (pd.DataFrame): Stock data
         symbol (str): Stock ticker symbol
     """
+    close = get_close(data, symbol)
+    volume = get_volume(data, symbol)
+    
     print(f"\n{'='*60}")
     print(f"Summary for {symbol}")
     print(f"{'='*60}")
     print(f"Total records: {len(data)}")
     print(f"Date range: {data.index[0].date()} to {data.index[-1].date()}")
     print(f"\nPrice Statistics (Close):")
-    print(f"  Highest: {data['Close'].max():.2f}")
-    print(f"  Lowest:  {data['Close'].min():.2f}")
-    print(f"  Average: {data['Close'].mean():.2f}")
-    print(f"  Latest:  {data['Close'][-1]:.2f}")
+    print(f"  Highest: {close.max():.2f}")
+    print(f"  Lowest:  {close.min():.2f}")
+    print(f"  Average: {close.mean():.2f}")
+    print(f"  Latest:  {close.iloc[-1]:.2f}")
     print(f"\nVolume Statistics:")
-    print(f"  Average Daily Volume: {data['Volume'].mean():,.0f}")
+    print(f"  Average Daily Volume: {volume.mean():,.0f}")
     print(f"\nFirst 5 records:")
     print(data.head())
     print(f"\nLast 5 records:")
@@ -94,14 +122,14 @@ def main():
     
     if data is not None:
         # Save to CSV
-        save_to_csv(data, OUTPUT_FILE)
+        save_to_csv(data, OUTPUT_FILE, STOCK_SYMBOL)
         
         # Print summary
         print_summary(data, STOCK_SYMBOL)
         
-        print("✓ Success! Stock data has been fetched and saved.")
+        print("+ Success! Stock data has been fetched and saved.")
     else:
-        print("✗ Failed to fetch stock data.")
+        print("X Failed to fetch stock data.")
 
 
 if __name__ == "__main__":
