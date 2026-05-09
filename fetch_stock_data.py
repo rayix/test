@@ -6,7 +6,7 @@ import yfinance as yf
 import pandas as pd
 
 # Configuration
-STOCK_SYMBOL = "7299.HK"  # Hong Kong stock - 7299
+STOCK_SYMBOL = "7226.HK"  # Hong Kong stock - 7226
 YEARS = 5
 OUTPUT_FILE = "stock_data.csv"
 
@@ -16,7 +16,7 @@ def fetch_stock_data(symbol, years):
     Fetch historical stock data from Yahoo Finance.
     
     Args:
-        symbol (str): Stock ticker symbol (e.g., "7299.HK")
+        symbol (str): Stock ticker symbol (e.g., "7226.HK")
         years (int): Number of years of historical data to fetch
     
     Returns:
