@@ -6,8 +6,8 @@ import yfinance as yf
 import pandas as pd
 
 # Configuration
-STOCK_SYMBOL = "7226.HK"  # Hong Kong stock - 7226
-YEARS = 5
+STOCK_SYMBOL = "7266.HK"  # Hong Kong stock - 7266
+YEARS = 3
 OUTPUT_FILE = "stock_data.csv"
 
 
