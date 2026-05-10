@@ -1,75 +1,73 @@
-# Stock Data Fetcher
+# 7226.HK Stock Backtest Strategy & Correlation Analysis
 
-A Python project to fetch historical stock data from Yahoo Finance.
+## Project Overview
+This project analyzes Hong Kong stock **7226.HK** (Towngas Smart Energy) for:
+- **Correlation Analysis**: Finding HK stocks with high positive/negative correlation to 7226.HK
+- **Backtest Strategy**: Testing trading strategies based on correlated stocks
 
-## Getting Started
+## Target Stock
+- **Code**: 7226.HK
+- **Name**: Towngas Smart Energy (港华智能能源)
+- **Sector**: Smart Energy / Utilities
 
-### Prerequisites
-- Python 3.8+
-- pip
+## Scripts
 
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/rayix/test.git
-cd test
-```
-
-2. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-### Fetch stock data
+### 1. fetch_stock_data.py
+Fetches historical stock data using yfinance.
 
 ```bash
 python fetch_stock_data.py
 ```
 
-This will fetch 5 years of day-end data for 7299.HK (Hong Kong stock) and save it to `stock_data.csv`.
+### 2. find_correlated_v4.py
+Analyzes correlations between 7226.HK and other HK stocks using direct Yahoo Finance v8 API.
 
-### Customize the stock symbol and date range
-
-Edit `fetch_stock_data.py` to change:
-- `STOCK_SYMBOL` - The stock ticker (default: "7299.HK")
-- `YEARS` - Number of years of historical data (default: 5)
-
-## Output
-
-The script generates:
-- `stock_data.csv` - CSV file with historical stock data
-- Console output with data summary
-
-## Data Columns
-
-- **Date** - Trading date
-- **Open** - Opening price
-- **High** - Highest price of the day
-- **Low** - Lowest price of the day
-- **Close** - Closing price
-- **Adj Close** - Adjusted closing price
-- **Volume** - Trading volume
-
-## Project Structure
-
+```bash
+python find_correlated_v4.py
 ```
-test/
-├── main.py                # Entry point
-├── fetch_stock_data.py    # Stock data fetcher
-├── requirements.txt       # Dependencies
-├── .gitignore            # Git ignore rules
-└── README.md             # This file
+Output: `correlation_results.csv`
+
+### 3. optimize_strategy.py
+Backtests trading strategies based on correlation signals.
+
+```bash
+python optimize_strategy.py
+```
+
+## Correlation Analysis Results
+
+### Top Positive Correlations (move together with 7226.HK)
+| Ticker | Correlation |
+|--------|-------------|
+| 3033.HK | +0.866 |
+| 3088.HK | +0.861 |
+| 0241.HK | +0.838 |
+| 3636.HK | +0.821 |
+| 2828.HK | +0.809 |
+
+### Top Negative Correlations (move opposite to 7226.HK)
+| Ticker | Correlation |
+|--------|-------------|
+| 1870.HK | -0.673 |
+| 1234.HK | -0.484 |
+| 2768.HK | -0.480 |
+| 3288.HK | -0.450 |
+| 1171.HK | -0.438 |
+
+## Data Period
+- **Date Range**: 2023-05-08 to 2026-05-08 (3 years)
+- **Data Points**: ~736 trading days
+
+## Requirements
+- Python 3.12+
+- pandas, numpy
+- yfinance (for data fetching)
+- Direct Yahoo Finance API (for correlation analysis)
+
+## Setup
+```bash
+pip install pandas numpy yfinance
 ```
 
 ## License
-
 MIT
