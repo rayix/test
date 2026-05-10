@@ -1,4 +1,4 @@
-# 7226.HK Stock Backtest Strategy & Correlation Analysis
+# 7226.HK Stock Backtest Strategy And Correlation With Other HK Stock
 
 ## Project Overview
 This project analyzes Hong Kong stock **7226.HK** (Towngas Smart Energy) for:
